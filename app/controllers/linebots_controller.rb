@@ -3,6 +3,8 @@ class LinebotsController < ApplicationController
 
   def callback
     params = JSON.parse(request.body.read)
-    render json: params
+    Rails.logger.info params
+
+    render nothing: true
   end
 end
