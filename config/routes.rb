@@ -2,7 +2,5 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 
-  namespace :linebot do
-    get 'callback'=> 'linebot#callback'
-  end
+  get 'callback'=> 'linebots#callback'
 end
