@@ -5,23 +5,21 @@ class LinebotsController < ApplicationController
     params = JSON.parse(request.body.read)
 
     params['result'].each do |msg|
+      content = {
+        toType: 1,
+        contentType: 1,
+        text: "お疲れ様です"
+      }
+
       request_content = {
         to: [msg['content']['from']],
         toChannel: 1383378250, # Fixed  value
         eventType: "138311608800106203", # Fixed value
-        content: msg['content']
+        content: content
       }
 
       endpoint_uri = 'https://trialbot-api.line.me/v1/events'
       content_json = request_content.to_json
-
-      Rails.logger.info "!!!!!!!!!!!!!!!"
-      Rails.logger.info content_json
-      Rails.logger.info ENV["FIXIE_URL"]
-      Rails.logger.info ENV["LINE_CHANNEL_ID"]
-      Rails.logger.info ENV["LINE_CHANNEL_SECRET"]
-      Rails.logger.info ENV["LINE_CHANNEL_MID"]
-      Rails.logger.info "!!!!!!!!!!!!!!!"
 
       RestClient.proxy = ENV["FIXIE_URL"] # 'http://xxx.xxx.xxx.xxx/'
       RestClient.post(endpoint_uri, content_json, {
