@@ -5,31 +5,36 @@ class LinebotsController < ApplicationController
     params = JSON.parse(request.body.read)
 
     params['result'].each do |msg|
-      content = {
-        toType: 1,
-        contentType: 1,
-        text: "お疲れ様です"
-      }
-
-      request_content = {
-        to: [msg['content']['from']],
-        toChannel: 1383378250, # Fixed  value
-        eventType: "138311608800106203", # Fixed value
-        content: content
-      }
-
-      endpoint_uri = 'https://trialbot-api.line.me/v1/events'
-      content_json = request_content.to_json
-
-      RestClient.proxy = ENV["FIXIE_URL"] # http://fixie:xxxx:80
-      RestClient.post(endpoint_uri, content_json, {
-        'Content-Type' => 'application/json; charset=UTF-8',
-        'X-Line-ChannelID' => ENV["LINE_CHANNEL_ID"],
-        'X-Line-ChannelSecret' => ENV["LINE_CHANNEL_SECRET"],
-        'X-Line-Trusted-User-With-ACL' => ENV["LINE_CHANNEL_MID"],
-      })
+      content = msg['content']
+      say([content['from']], content['text'].reverse)
     end
-
     render nothing: true
+  end
+
+  private
+  def say(to, content)
+    content = {
+      toType: 1,
+      contentType: 1,
+      text: content
+    }
+
+    request_content = {
+      to: to,
+      toChannel: 1383378250, # Fixed  value
+      eventType: "138311608800106203", # Fixed value
+      content: content
+    }
+
+    endpoint_uri = 'https://trialbot-api.line.me/v1/events'
+    content_json = request_content.to_json
+
+    RestClient.proxy = ENV["FIXIE_URL"] # http://fixie:xxxx:80
+    RestClient.post(endpoint_uri, content_json, {
+      'Content-Type' => 'application/json; charset=UTF-8',
+      'X-Line-ChannelID' => ENV["LINE_CHANNEL_ID"],
+      'X-Line-ChannelSecret' => ENV["LINE_CHANNEL_SECRET"],
+      'X-Line-Trusted-User-With-ACL' => ENV["LINE_CHANNEL_MID"],
+    })
   end
 end
