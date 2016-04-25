@@ -21,7 +21,7 @@ class LinebotsController < ApplicationController
       endpoint_uri = 'https://trialbot-api.line.me/v1/events'
       content_json = request_content.to_json
 
-      RestClient.proxy = ENV["FIXIE_URL"] # 'http://xxx.xxx.xxx.xxx/'
+      RestClient.proxy = ENV["FIXIE_URL"] # http://fixie:xxxx:80
       RestClient.post(endpoint_uri, content_json, {
         'Content-Type' => 'application/json; charset=UTF-8',
         'X-Line-ChannelID' => ENV["LINE_CHANNEL_ID"],
