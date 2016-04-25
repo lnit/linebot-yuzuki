@@ -5,18 +5,27 @@ class LinebotsController < ApplicationController
     params = JSON.parse(request.body.read)
 
     params['result'].each do |msg|
-      content = msg['content']
-      say([content['from']], content['text'].reverse)
+      from = msg['content']['from']
+      text = msg['content']['text']
+
+      say([from], text.reverse)
+
+      if text == text.reverse
+        say([from], "回文です")
+      else
+        say([from], "回文ではありません")
+      end
     end
+
     render nothing: true
   end
 
   private
-  def say(to, content)
+  def say(to, text)
     content = {
       toType: 1,
       contentType: 1,
-      text: content
+      text: text
     }
 
     request_content = {
